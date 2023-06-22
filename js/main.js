@@ -4,18 +4,15 @@ const addInput = document.querySelector('.add_input');
 const addBtn = document.querySelector('.add_btn');
 
 function onAdd(){
-    // 1. 사용자가 입력한 텍스트 받아오기
     const text = addInput.value;
-
-    // 2. 새로운 아이템을 만들기(텍스트 + 삭제버튼)
+    if(text === '') {
+        alert('오늘 할 일을 작성해주세요!');
+        addInput.focus(); 
+        return;
+    }
     const item = createItem(text);
-
-    // 3. items 라는 컨테이너 안에 새로 만든 아이템 추가
     items.appendChild(item);
-
-    console.log(items);
-
-    // 4. input 값을 초기화
+    item.scrollIntoView({block: 'center'});
     addInput.value = '';
     addInput.focus();
 }
@@ -50,7 +47,11 @@ function createItem(text) {
 }
 
 addBtn.addEventListener('click', event => {
-    event.preventDefault(); // form 기본동작(submit) 제거
     onAdd();
 });
 
+addInput.addEventListener('keypress', event => {
+    if(event.key === 'Enter') {
+        onAdd();
+    }
+});
