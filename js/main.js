@@ -40,18 +40,18 @@ function createItem(text) {
 
     item.appendChild(name);
     item.appendChild(deleteBtn);
-
     itemRow.appendChild(item);
+    itemRow.appendChild(itemDivider);
 
     return itemRow;
 }
-
-addBtn.addEventListener('click', event => {
-    onAdd();
-});
 
 addInput.addEventListener('keypress', event => {
     if(event.key === 'Enter') {
         onAdd();
     }
+});
+
+addBtn.addEventListener('click', event => {
+    onAdd();
 });
