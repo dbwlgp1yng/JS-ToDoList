@@ -1,4 +1,5 @@
 const items = document.querySelector('.items');
+const form = document.querySelector('.new-form');
 const addInput = document.querySelector('.add_input');
 const addBtn = document.querySelector('.add_btn');
 
@@ -33,17 +34,9 @@ function createItem(text) {
     return itemRow;
 }
 
-addBtn.addEventListener('click', event => {
+form.addEventListener('submit', event => {
+    event.preventDefault();
     onAdd();
-});
-
-addInput.addEventListener('keydown', event => {
-    if(event.isComposing) {
-        return;
-    }
-    if(event.key === 'Enter') {
-        onAdd();
-    }
 });
 
 items.addEventListener('click', event => {
