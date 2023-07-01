@@ -1,0 +1,77 @@
+.todo_box {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 500px; 
+  background: #f2f3f7;
+  border-radius: 60px;
+  box-shadow: -1px -1px 4px #fff, 1px 2px 4px rgba(0, 0, 0, 0.3), inset 1px 2px 2px rgba(0, 0, 0, 0.1), inset -1px -1px 3px #fff;
+}
+.todo_title {
+  padding: 40px 0 0; margin: 0 0 50px 150px;
+  font-size: 30px; font-weight: 600; font-family: 'Poppins', sans-serif;
+  display: inline-block;
+  border-bottom: solid 2px #1c32f7;
+}
+#todo-form {
+  width: 400px; 
+  margin: 0 auto; 
+  padding: 12px; box-sizing: border-box;
+  box-shadow: -1px -1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+}
+input[type="text"] {
+  width: 80%;
+  background: transparent;
+  border: none; outline-width: 0;
+}
+#items {
+  position: relative;
+  width: 400px;
+  height: 380px;
+  padding-left: 50px;
+  overflow-y: auto;
+}
+#items li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #fcfcfc;
+  box-shadow: 0px -1px 4px -1px rgba(0, 0, 0, 0.2);
+  border-radius: 18px;
+  margin-bottom: 20px;
+}
+.item_row {
+  position: sticky;
+  font-weight: 500;
+  font-size: 14px;
+  color: #696969;
+}
+.item_row span {
+  font-size: 14px;
+  color: #333;
+} 
+.iconcircle {
+  width: 32px;
+  height: 32px;
+  margin-left: 8px;  
+  background: #f9f9f9;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.25), -3px -3px 4px #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer; 
+}
+.fa-check { color: #4cf547; }
+.fa-trash { color: #fd5252; }
+
+/* done */
+.item_name_done{
+  color: #696969;
+  text-decoration: line-through;
+}
+.iconcircle_done{
+  box-shadow: none;
+  background-color: transparent;
+}
+.iconcircle_done > i{ 
+  color: #1c32f7;
+}
