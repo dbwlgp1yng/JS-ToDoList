@@ -1,5 +1,6 @@
 <h1 align="center"><b>To-do list</b></h1>
-![thingsTodo](https://github.com/dbwlgp1yng/JS-ToDoList/assets/126330595/5290d45b-7bcd-406a-9ba8-41357dd51f5d)
+
+<img width="100%" src="readme/thingstodo.png">  
 
 <p align="center">JavaScript를 활용한 Todo List 앱 만들기</p>
 
