@@ -4,6 +4,8 @@ const TodoForm = document.querySelector("#todo-form");
 const TodoInput = document.querySelector("input");
 const items = document.querySelector("#items");
 let id = 0; 
+let checked = []; 
+
 
 // 리스트 추가
 function addTodo(event) {
@@ -13,7 +15,7 @@ function addTodo(event) {
     TodoInput.focus();
     return;
   }
-  const item = paintTodo(newTodo);
+  const item = createTodo(newTodo);
   items.appendChild(item);
   item.scrollIntoView({ block: "center" });
 
@@ -24,7 +26,7 @@ function addTodo(event) {
 }
 
 // 리스트 생성
-function paintTodo(newTodo) {
+function createTodo(newTodo) {
   const itemRow = document.createElement('li');
   itemRow.classList.add('item_row');
   itemRow.setAttribute('data-id', id.toString());
@@ -62,25 +64,25 @@ function paintTodo(newTodo) {
 
 // 글 체크
 function checkToggle(id) {
-  const childCount = items.childElementCount;
-  for (let i = 0; i < childCount; i++) {
-    let rowID = items.children[i].getAttribute('data-id');
-    if(id === rowID) {
-      items.children[i].children[1].children[0].classList.toggle("iconcircle_done");
-      items.children[i].children[0].classList.toggle("item_name_done");
+  const item = items.querySelector(`[data-id="${id}"]`);
+  if (item) {
+    item.children[1].children[0].classList.toggle("iconcircle_done");
+    item.children[0].classList.toggle("item_name_done");
+
+    const checkedIndex = checked.indexOf(id);
+    if (checkedIndex > -1) {
+      checked.splice(checkedIndex, 1);
+    } else {
+      checked.push(id);
     }
   }
 }
 
 // 글 삭제
 function deleteToggle(id) {
-  const childCount = items.childElementCount;
-  for (let i = 0; i < childCount; i++) {
-    let rowID = items.children[i].getAttribute('data-id');
-    if(id === rowID) {
-      items.children[i].remove();
-      break;
-    }
+  const item = items.querySelector(`[data-id="${id}"]`);
+  if (item) {
+    item.remove();
   }
 }
 
@@ -101,19 +103,33 @@ function saveItemsInBrowser() {
     todoItems.push({ id: rowID, name: itemName });
   }
   localStorage.setItem("items", JSON.stringify(todoItems));
+  localStorage.setItem("checkedItems", JSON.stringify(checked));
 }
 
 function getItemsFromBrowser() {
   const loadedItems = localStorage.getItem("items");
+  const loadedCheckedItems = localStorage.getItem("checkedItems");
 
-  if(loadedItems) {
+  if (loadedItems) {
     const todoItems = JSON.parse(loadedItems);
     todoItems.forEach((item) => {
-      const newItem = paintTodo(item.name);
+      const newItem = createTodo(item.name);
       newItem.setAttribute("data-id", item.id);
       items.appendChild(newItem);
     });
   }
+
+  if (loadedCheckedItems) {
+    checked = JSON.parse(loadedCheckedItems);
+    checked.forEach((id) => {
+      const item = items.querySelector(`[data-id="${id}"]`);
+      if (item) {
+        item.children[1].children[0].classList.add("iconcircle_done");
+        item.children[0].classList.add("item_name_done");
+      }
+    });
+  }
 }
+
 
 TodoForm.addEventListener("submit", addTodo);
