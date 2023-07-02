@@ -6,7 +6,6 @@ const items = document.querySelector("#items");
 let id = 0; 
 let checked = []; 
 
-
 // 리스트 추가
 function addTodo(event) {
   event.preventDefault();
@@ -50,11 +49,11 @@ function createTodo(newTodo) {
   itemRow.addEventListener('click', (e) => {
     const target = e.target;
     const button = target.closest('button');
-    const id = itemRow.getAttribute('data-id');
+    const dataId = itemRow.getAttribute('data-id');
     if (button && button.classList.contains('check')) {
-      checkToggle(id);
+      checkToggle(dataId);
     } else if (button && button.classList.contains('delete')) {
-      deleteToggle(id);
+      deleteToggle(dataId);
     }
   });
 
@@ -65,6 +64,7 @@ function createTodo(newTodo) {
 // 글 체크
 function checkToggle(id) {
   const item = items.querySelector(`[data-id="${id}"]`);
+  console.log(item);
   if (item) {
     item.children[1].children[0].classList.toggle("iconcircle_done");
     item.children[0].classList.toggle("item_name_done");
@@ -81,18 +81,21 @@ function checkToggle(id) {
 // 글 삭제
 function deleteToggle(id) {
   const item = items.querySelector(`[data-id="${id}"]`);
+  const checkedIndex = checked.indexOf(id);
   if (item) {
     item.remove();
+    checked.splice(checkedIndex, 1);
   }
 }
 
 window.addEventListener("load", () => {
-  getItemsFromBrowser();
+  getItemsFromLocalStorage();
 });
 
 window.addEventListener("beforeunload", () => {
   saveItemsInBrowser();
 });
+
 
 function saveItemsInBrowser() {
   const todoItems = [];
@@ -106,7 +109,7 @@ function saveItemsInBrowser() {
   localStorage.setItem("checkedItems", JSON.stringify(checked));
 }
 
-function getItemsFromBrowser() {
+function getItemsFromLocalStorage() {
   const loadedItems = localStorage.getItem("items");
   const loadedCheckedItems = localStorage.getItem("checkedItems");
 
@@ -120,8 +123,8 @@ function getItemsFromBrowser() {
   }
 
   if (loadedCheckedItems) {
-    checked = JSON.parse(loadedCheckedItems);
-    checked.forEach((id) => {
+    const checkedItems = JSON.parse(loadedCheckedItems);
+    checkedItems.forEach((id) => {
       const item = items.querySelector(`[data-id="${id}"]`);
       if (item) {
         item.children[1].children[0].classList.add("iconcircle_done");
@@ -131,5 +134,6 @@ function getItemsFromBrowser() {
   }
 }
 
-
 TodoForm.addEventListener("submit", addTodo);
+
+// 코드를 다시 확인해보니 saveItemsInBrowser 함수가 getItemsFromLocalStorage 함수보다 먼저 호출되고 있습니다. 이로 인해 로컬 스토리지에 저장된 체크된 아이템 정보가 가져와지기 전에 saveItemsInBrowser 함수가 실행되어 덮어쓰게 됩니다.
