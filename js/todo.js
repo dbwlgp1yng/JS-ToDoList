@@ -19,13 +19,15 @@ function addTodo(event) {
 
   TodoInput.value = "";
   TodoInput.focus();
+
+  saveItemsInBrowser();
 }
 
 // 리스트 생성
 function paintTodo(newTodo) {
   const itemRow = document.createElement('li');
   itemRow.classList.add('item_row');
-  itemRow.setAttribute('data-id', id);
+  itemRow.setAttribute('data-id', id.toString());
 
   const checkBtn = document.createElement("button");
   checkBtn.classList.add("iconcircle", "check");
@@ -79,6 +81,38 @@ function deleteToggle(id) {
       items.children[i].remove();
       break;
     }
+  }
+}
+
+window.addEventListener("load", () => {
+  getItemsFromBrowser();
+});
+
+window.addEventListener("beforeunload", () => {
+  saveItemsInBrowser();
+});
+
+function saveItemsInBrowser() {
+  const todoItems = [];
+  const childCount = items.childElementCount;
+  for (let i = 0; i < childCount; i++) {
+    let rowID = items.children[i].getAttribute('data-id');
+    let itemName = items.children[i].querySelector('.item_name').textContent;
+    todoItems.push({ id: rowID, name: itemName });
+  }
+  localStorage.setItem("items", JSON.stringify(todoItems));
+}
+
+function getItemsFromBrowser() {
+  const loadedItems = localStorage.getItem("items");
+
+  if(loadedItems) {
+    const todoItems = JSON.parse(loadedItems);
+    todoItems.forEach((item) => {
+      const newItem = paintTodo(item.name);
+      newItem.setAttribute("data-id", item.id);
+      items.appendChild(newItem);
+    });
   }
 }
 
