@@ -3,7 +3,6 @@
 const TodoForm = document.querySelector("#todo-form");
 const TodoInput = document.querySelector("input");
 const items = document.querySelector("#items");
-// let id = 0;
 let id = getMaxIdFromLocalStorage() || 0; 
 let checked = []; 
 
@@ -79,8 +78,6 @@ function checkToggle(id) {
     } else {
       checked.push(id);
     }
-
-    saveItemsInBrowser(checked); // 체크 상태 변경 후에 로컬 스토리지에 저장
   }
 }
 
@@ -91,7 +88,6 @@ function deleteToggle(id) {
   if (item) {
     item.remove();
     checked.splice(checkedIndex, 1);
-    saveItemsInBrowser(checked); // 삭제 후에 로컬 스토리지에 저장
   }
 }
 
