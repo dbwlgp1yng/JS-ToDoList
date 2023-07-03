@@ -3,7 +3,8 @@
 const TodoForm = document.querySelector("#todo-form");
 const TodoInput = document.querySelector("input");
 const items = document.querySelector("#items");
-let id = 0; 
+// let id = 0;
+let id = getMaxIdFromLocalStorage() || 0; 
 let checked = []; 
 
 // 리스트 추가
@@ -57,6 +58,10 @@ function createTodo(newTodo) {
     }
   });
 
+  const maxId = getMaxIdFromLocalStorage(); // 로컬 스토리지에서 최댓값 가져오기
+  const newId = maxId !== null ? maxId + 1 : 0; // 최댓값이 존재하면 +1, 아니면 0으로 설정
+  itemRow.setAttribute('data-id', newId.toString());
+
   id++;
   return itemRow;
 }
@@ -64,7 +69,6 @@ function createTodo(newTodo) {
 // 글 체크
 function checkToggle(id) {
   const item = items.querySelector(`[data-id="${id}"]`);
-  console.log(item);
   if (item) {
     item.children[1].children[0].classList.toggle("iconcircle_done");
     item.children[0].classList.toggle("item_name_done");
@@ -75,6 +79,8 @@ function checkToggle(id) {
     } else {
       checked.push(id);
     }
+
+    saveItemsInBrowser(checked); // 체크 상태 변경 후에 로컬 스토리지에 저장
   }
 }
 
@@ -85,19 +91,20 @@ function deleteToggle(id) {
   if (item) {
     item.remove();
     checked.splice(checkedIndex, 1);
+    saveItemsInBrowser(checked); // 삭제 후에 로컬 스토리지에 저장
   }
 }
 
 window.addEventListener("load", () => {
-  getItemsFromLocalStorage();
+  getItemsFromLocalStorage(checked);
 });
 
 window.addEventListener("beforeunload", () => {
-  saveItemsInBrowser();
+  saveItemsInBrowser(checked);
 });
 
 
-function saveItemsInBrowser() {
+function saveItemsInBrowser(checked) {
   const todoItems = [];
   const childCount = items.childElementCount;
   for (let i = 0; i < childCount; i++) {
@@ -122,9 +129,9 @@ function getItemsFromLocalStorage() {
     });
   }
 
-  if (loadedCheckedItems) {
-    const checkedItems = JSON.parse(loadedCheckedItems);
-    checkedItems.forEach((id) => {
+  if (loadedCheckedItems && loadedCheckedItems !== "undefined") {
+    checked = JSON.parse(loadedCheckedItems); 
+    checked.forEach((id) => {
       const item = items.querySelector(`[data-id="${id}"]`);
       if (item) {
         item.children[1].children[0].classList.add("iconcircle_done");
@@ -134,6 +141,17 @@ function getItemsFromLocalStorage() {
   }
 }
 
-TodoForm.addEventListener("submit", addTodo);
+// 로컬에서 maxID값 가져오기
+function getMaxIdFromLocalStorage() {
+  const loadedItems = localStorage.getItem("items");
+  if (loadedItems) {  
+    const todoItems = JSON.parse(loadedItems); 
+    if (todoItems.length > 0) {
+      const maxId = Math.max(...todoItems.map((item) => parseInt(item.id)));
+      return maxId;
+    }
+  }
+  return null; 
+}
 
-// 코드를 다시 확인해보니 saveItemsInBrowser 함수가 getItemsFromLocalStorage 함수보다 먼저 호출되고 있습니다. 이로 인해 로컬 스토리지에 저장된 체크된 아이템 정보가 가져와지기 전에 saveItemsInBrowser 함수가 실행되어 덮어쓰게 됩니다.
+TodoForm.addEventListener("submit", addTodo);
