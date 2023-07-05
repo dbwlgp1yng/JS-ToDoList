@@ -57,8 +57,8 @@ function createTodo(newTodo) {
     }
   });
 
-  const maxId = getMaxIdFromLocalStorage(); // 로컬 스토리지에서 최댓값 가져오기
-  const newId = maxId !== null ? maxId + 1 : 0; // 최댓값이 존재하면 +1, 아니면 0으로 설정
+  const maxId = getMaxIdFromLocalStorage(); 
+  const newId = maxId !== null ? maxId + 1 : 0; 
   itemRow.setAttribute('data-id', newId.toString());
 
   id++;
